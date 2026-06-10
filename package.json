@@ -1,0 +1,33 @@
+{
+  "name": "breezy-auth-service",
+  "version": "1.0.0",
+  "description": "Authentication microservice - Register, Login, JWT",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file=.env src/index.js",
+    "dev": "nodemon --exec \"node --env-file=.env\" src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DAD-groupe-2aix/breezy-auth-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DAD-groupe-2aix/breezy-auth-service/issues"
+  },
+  "homepage": "https://github.com/DAD-groupe-2aix/breezy-auth-service#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.21.0",
+    "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
