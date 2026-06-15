@@ -4,7 +4,7 @@
   "description": "Authentication microservice - Register, Login, JWT",
   "main": "index.js",
   "scripts": {
-    "start": "node --env-file=.env src/index.js",
+    "start": "node src/index.js",
     "dev": "nodemon --exec \"node --env-file=.env\" src/index.js"
   },
   "repository": {
