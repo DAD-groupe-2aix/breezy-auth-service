@@ -20,12 +20,7 @@ async function login(req, res) {
   }
 }
 
-module.exports = { register, login };
-
 function validate(req, res) {
-  if (!req.user) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
   return res.status(200).json({ message: "Token is valid", user: req.user });
 }
 
