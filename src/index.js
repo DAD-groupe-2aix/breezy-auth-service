@@ -1,6 +1,7 @@
 const express = require("express");
 const sequelize = require("./config/database.config");
 const authRoutes = require("./routes/auth.routes");
+require("./models/refreshToken.model");
 
 const app = express();
 const port = process.env.API_PORT || 3000;

@@ -20,13 +20,30 @@ async function login(req, res) {
   }
 }
 
-module.exports = { register, login };
-
 function validate(req, res) {
-  if (!req.user) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
   return res.status(200).json({ message: "Token is valid", user: req.user });
 }
 
-module.exports = { register, login, validate };
+async function refresh(req, res) {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) return res.status(400).json({ message: "Refresh token requis" });
+    const result = await AuthService.refresh(refreshToken);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(401).json({ message: err.message });
+  }
+}
+
+async function logout(req, res) {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) return res.status(400).json({ message: "Refresh token requis" });
+    await AuthService.logout(refreshToken);
+    res.status(200).json({ message: "Déconnecté avec succès" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+module.exports = { register, login, validate, refresh, logout };
