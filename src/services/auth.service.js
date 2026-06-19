@@ -9,8 +9,9 @@ async function register(email, password) {
 
   const passwordHash = await hashPassword(password);
   const newUser = await User.create({ email, passwordHash });
+  const token = generateToken({ id: newUser.id, email: newUser.email, role: newUser.role });
 
-  return { email: newUser.email, role: newUser.role };
+  return { token, userId: newUser.id, email: newUser.email };
 }
 
 async function login(email, password) {
@@ -30,7 +31,7 @@ async function login(email, password) {
     expiresAt: new Date(decoded.exp * 1000),
   });
 
-  return { token, refreshToken };
+  return { token, refreshToken, userId: user.id, email: user.email };
 }
 
 async function refresh(refreshTokenStr) {
