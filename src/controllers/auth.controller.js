@@ -48,5 +48,32 @@ async function logout(req, res) {
     res.status(400).json({ message: err.message });
   }
 }
+async function listUsers(req, res) {
+  try {
+    const users = await AuthService.listUsers();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
 
-module.exports = { register, login, validate, refresh, logout };
+async function updateUserRole(req, res) {
+  try {
+    const result = await AuthService.updateUserRole(req.params.id, req.body.role);
+    res.status(200).json({ message: `Rôle mis à jour : ${result.role}`, user: result });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+async function adminCreateUser(req, res) {
+  try {
+    const { email, password, role } = req.body;
+    const result = await AuthService.adminCreateUser(email, password, role);
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+module.exports = { register, login, validate, refresh, logout, listUsers, updateUserRole, adminCreateUser };

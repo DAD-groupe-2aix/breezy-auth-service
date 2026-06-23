@@ -11,7 +11,8 @@ async function register(email, password) {
   const newUser = await User.create({ email, passwordHash });
   const token = generateToken({ id: newUser.id, email: newUser.email, role: newUser.role });
 
-  return { token, userId: newUser.id, email: newUser.email };
+  return { token, userId: newUser.id, email: newUser.email, role: newUser.role };
+
 }
 
 async function login(email, password) {
@@ -31,7 +32,8 @@ async function login(email, password) {
     expiresAt: new Date(decoded.exp * 1000),
   });
 
-  return { token, refreshToken, userId: user.id, email: user.email };
+  return { token, refreshToken, userId: user.id, email: user.email, role: user.role };
+
 }
 
 async function refresh(refreshTokenStr) {
@@ -64,5 +66,29 @@ async function logout(refreshTokenStr) {
   if (!stored) throw new Error("Refresh token non trouvé");
   await stored.destroy();
 }
+async function listUsers() {
+  return User.findAll({ attributes: ["id", "email", "role"], order: [["id", "ASC"]] });
+}
 
-module.exports = { register, login, refresh, logout };
+async function updateUserRole(id, role) {
+  const validRoles = ["user", "moderator", "admin"];
+  if (!validRoles.includes(role)) throw new Error("Rôle invalide");
+  const user = await User.findByPk(id);
+  if (!user) throw new Error("Utilisateur introuvable");
+  user.role = role;
+  await user.save();
+  return { id: user.id, email: user.email, role: user.role };
+}
+
+async function adminCreateUser(email, password, role) {
+  const validRoles = ["user", "moderator", "admin"];
+  if (!validRoles.includes(role)) throw new Error("Rôle invalide");
+  const existingUser = await User.findOne({ where: { email } });
+  if (existingUser) throw new Error("User already exists");
+  const passwordHash = await hashPassword(password);
+  const newUser = await User.create({ email, passwordHash, role });
+  return { userId: newUser.id, email: newUser.email, role: newUser.role };
+}
+
+
+module.exports = { register, login, refresh, logout, listUsers, updateUserRole, adminCreateUser };
