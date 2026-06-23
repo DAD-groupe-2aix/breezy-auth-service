@@ -21,8 +21,11 @@ async function login(req, res) {
 }
 
 function validate(req, res) {
+  res.set('X-User-Id', String(req.user.id));
+  res.set('X-User-Role', req.user.role);
   return res.status(200).json({ message: "Token is valid", user: req.user });
 }
+
 
 async function refresh(req, res) {
   try {
