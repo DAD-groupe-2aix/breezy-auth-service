@@ -2,6 +2,23 @@ const { hashPassword, comparePassword } = require("../utils/bcrypt.util");
 const { generateToken, generateRefreshToken, verifyRefreshToken } = require("../utils/jwt.util");
 const User = require("../models/user.model");
 const RefreshToken = require("../models/refreshToken.model");
+const axios = require("axios");
+
+const USER_SERVICE_URL = process.env.USER_SERVICE_URL || "http://user-service:3001";
+
+async function findUserByIdentifier(identifier) {
+  if (identifier.includes("@")) {
+    return User.findOne({ where: { email: identifier } });
+  }
+  try {
+    const { data } = await axios.get(`${USER_SERVICE_URL}/api/users/profile/username/${identifier}`);
+    return User.findByPk(data.authId);
+  } catch {
+    return null;
+  }
+}
+
+
 
 async function register(email, password) {
   const existingUser = await User.findOne({ where: { email } });
@@ -15,8 +32,8 @@ async function register(email, password) {
 
 }
 
-async function login(email, password) {
-  const user = await User.findOne({ where: { email } });
+async function login(identifier, password) {
+  const user = await findUserByIdentifier(identifier);
   if (!user) throw new Error("Invalid credentials");
 
   const isValid = await comparePassword(password, user.passwordHash);
