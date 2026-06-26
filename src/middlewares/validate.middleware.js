@@ -10,11 +10,14 @@ const registerRules = [
 
 const loginRules = [
   body("email")
+    .notEmpty().withMessage("Email ou pseudo requis")
+    .if((value) => typeof value === "string" && value.includes("@"))
     .isEmail().withMessage("Format d'email invalide")
     .normalizeEmail(),
   body("password")
     .notEmpty().withMessage("Le mot de passe est requis"),
 ];
+
 
 function validate(req, res, next) {
   const errors = validationResult(req);
