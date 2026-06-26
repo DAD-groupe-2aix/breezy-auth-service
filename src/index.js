@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const sequelize = require("./config/database.config");
 const authRoutes = require("./routes/auth.routes");
 require("./models/refreshToken.model");
@@ -8,6 +9,7 @@ const port = process.env.API_PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "UP" });

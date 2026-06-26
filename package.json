@@ -21,6 +21,7 @@
   "homepage": "https://github.com/DAD-groupe-2aix/breezy-auth-service#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-validator": "^7.3.2",
